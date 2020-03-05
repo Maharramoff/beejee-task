@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use App\Models\Auth;
 use BeeJee\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class BaseController extends Controller
 {
@@ -20,7 +21,32 @@ class BaseController extends Controller
 
         // Global variables for all views
         $this->view->assign([
-            'user'  => $this->user,
+            'user'           => $this->user,
+            'successMessage' => null,
+            'errorMessage'   => null,
         ]);
     }
+
+    /**
+     * @param mixed $errorMessage
+     */
+    public function setErrorMessage($errorMessage): void
+    {
+        $this->view->assign([
+            'errorMessage'   => $errorMessage,
+            'successMessage' => null
+        ]);
+    }
+
+    /**
+     * @param mixed $successMessage
+     */
+    public function setSuccessMessage($successMessage): void
+    {
+        $this->view->assign([
+            'errorMessage'   => null,
+            'successMessage' => $successMessage
+        ]);
+    }
+
 }
