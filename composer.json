@@ -12,11 +12,18 @@
             "email": "sh.maharramov@gmail.com"
         }
     ],
+    "config": {
+        "optimize-autoloader": true
+    },
     "require-dev": {
         "symfony/var-dumper": "^5.0"
     },
     "autoload": {
+        "files": [
+            "config/defines.php"
+        ],
         "psr-4": {
+            "BeeJee\\": "src/",
             "App\\": "app/"
         }
     }
