@@ -5,7 +5,7 @@ namespace App\Controllers;
 
 use App\Models\Auth;
 use BeeJee\Controller;
-use Symfony\Component\HttpFoundation\Request;
+use BeeJee\Helper;
 
 class BaseController extends Controller
 {
@@ -24,6 +24,7 @@ class BaseController extends Controller
             'user'           => $this->user,
             'successMessage' => null,
             'errorMessage'   => null,
+            'helper'         => Helper::class,
         ]);
     }
 
@@ -48,5 +49,4 @@ class BaseController extends Controller
             'successMessage' => $successMessage
         ]);
     }
-
 }
