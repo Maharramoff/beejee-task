@@ -37,4 +37,14 @@ abstract class Model
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
+
+    /**
+     * Get all rows
+     *
+     * @return array
+     */
+    public static function all(): array
+    {
+        return static::db()->query("SELECT * FROM " . static::$table)->fetchAll();
+    }
 }
