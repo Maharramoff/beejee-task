@@ -5,34 +5,38 @@ namespace App\Controllers;
 
 
 use BeeJee\Helper;
-use Symfony\Component\HttpFoundation\ParameterBag as Request;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class AuthController extends BaseController
 {
     /**
      * Handle a login request to the application.
      *
-     * @return void|array|string
+     * @return void
      */
     public function login()
     {
         // Redirect user if already authenticated
         if ($this->auth->check())
         {
-            Helper::redirect('/home');
+            Helper::redirect('/');
         }
 
         if ($this->request->getMethod() === 'POST')
         {
-            if ($this->validate($this->request->request))
+            switch (true)
             {
-                if ($this->auth->loginAttempt($this->request->request->get('name'), $this->request->request->get('password')))
-                {
+                case !$this->validate($this->parameterBag):
+                    $this->emptyFieldsResponse();
+                    break;
+
+                case !$this->auth->loginAttempt($this->parameterBag->get('name'), $this->parameterBag->get('password')):
+                    $this->failedLoginResponse();
+                    break;
+
+                default:
                     $this->successLoginResponse();
-                }
-                else $this->failedLoginResponse();
             }
-            else $this->emptyFieldsResponse();
         }
 
         $this->view->setPath('auth/login')->render();
@@ -43,7 +47,7 @@ class AuthController extends BaseController
         // Redirect user if already authenticated
         if ($this->auth->check())
         {
-            Helper::redirect('/home');
+            Helper::redirect('/');
         }
 
         $this->view->setPath('auth/login')->render();
@@ -61,21 +65,16 @@ class AuthController extends BaseController
 
     private function failedLoginResponse()
     {
-        $this->setErrorMessage('User credentials are not valid');
-    }
-
-    private function emptyFieldsResponse()
-    {
-        $this->setErrorMessage('Fields should not be empty');
+        $this->setErrorMessage('Неправильное имя и/или пароль');
     }
 
     private function successLoginResponse()
     {
-        $this->setSuccessMessage('User successfuly logged in');
+        $this->setSuccessMessage('Вы успешно авторизовались на сайте! <br/><a href="/" class="alert-link">Для продолжения использования сайтом нажмите сюда</a>');
     }
 
-    private function validate(Request $request)
+    private function validate(ParameterBag $parameterBag)
     {
-        return $request->get('name') && $request->get('password');
+        return $parameterBag->get('name') && $parameterBag->get('password');
     }
 }
