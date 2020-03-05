@@ -13,8 +13,6 @@ abstract class Model
      */
     protected static $table;
 
-    protected static $db = null;
-
     /**
      * Table name
      *
@@ -22,9 +20,9 @@ abstract class Model
      */
     protected static $primaryKey = 'id';
 
-    public function  __construct()
+    protected static function db()
     {
-        self::$db = DB::getInstance();
+        return DB::getInstance();
     }
 
     /**
@@ -35,7 +33,7 @@ abstract class Model
      */
     public static function find(int $id): array
     {
-        $stmt = static::$db->prepare("SELECT * FROM " . static::$table . " WHERE " . static::$primaryKey . " = ?");
+        $stmt = static::db()->prepare("SELECT * FROM " . static::$table . " WHERE " . static::$primaryKey . " = ?");
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
