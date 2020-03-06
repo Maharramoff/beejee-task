@@ -13,9 +13,27 @@ class TaskController extends BaseController
 {
     public function index($orderBy = 'id', $sortBy = 'asc', $page = 1)
     {
-        $result = Task::allFiltered($orderBy, $sortBy, $page, 3);
-        $data['tasks'] = $result['rows'];
-        $data['pagination'] = Helper::paginate('/tasks/' . $orderBy . '/' . $sortBy, $result['maxPages'], $result['totalRows'], 3, $result['page']);
+        $data['fields'] = [
+            'id'         => ['name' => 'ID', 'sortable' => true, 'width' => '5'],
+            'user_name'  => ['name' => 'Имя пользователя', 'sortable' => true, 'width' => '10'],
+            'user_email' => ['name' => 'Email', 'sortable' => true, 'width' => '15'],
+            'text'       => ['name' => 'Текст задачи', 'sortable' => true, 'width' => '25'],
+            'status'     => ['name' => 'Статус', 'sortable' => true, 'width' => '25'],
+        ];
+
+        if(!isset($data['fields'][$orderBy]))
+        {
+            $orderBy = 'id';
+        }
+
+        $result                    = Task::allFiltered($orderBy, $sortBy, $page, 3);
+        $data['tasks']             = $result['rows'];
+        $data['pagination']        = Helper::paginate('/tasks/' . $orderBy . '/' . $sortBy, $result['maxPages'], $result['totalRows'], 3, $result['page']);
+        $data['orderBy']           = $orderBy;
+        $data['sortBy']            = $sortBy;
+        $data['page']              = $result['page'];
+        $data['fields']['options'] = ['name' => 'Действия', 'sortable' => false, 'width' => '20'];
+
         $this->view->setPath('task/index')->assign($data)->render();
     }
 
@@ -63,6 +81,7 @@ class TaskController extends BaseController
 
         if ($this->request->getMethod() === 'POST')
         {
+            // Check if current text differ posted one
             similar_text($data['task']['text'], $this->parameterBag->get('text'), $percent);
 
             if ($this->validateUpdate($this->parameterBag))

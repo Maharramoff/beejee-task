@@ -3,16 +3,45 @@
         <div class="col-12">
             <a class="btn btn-primary btn-sm float-left mb-3" href="/tasks/create" role="button">Новая задача</a>
             <?=$pagination?>
-            <div class="table-responsive-md">
+            <div class="table-responsive">
                 <table class="table table-hover">
-                    <thead>
+                    <thead class="thead-light">
                     <tr>
-                        <th scope="col" style="width: 5%">#</th>
-                        <th scope="col" style="width: 10%">Имя пользователя</th>
-                        <th scope="col" style="width: 15%">Email</th>
-                        <th scope="col" style="width: 25%">Текст задачи</th>
-                        <th scope="col" style="width: 25%">Статус</th>
-                        <th scope="col" style="width: 20%">Действия</th>
+                        <?
+                        foreach ($fields as $key => $field)
+                        {
+                            ?>
+                            <th scope="col" style="width: <?=$field['width']?>%; white-space: nowrap;">
+                                <?php
+
+                                if (!$field['sortable'])
+                                {
+                                    echo '<span style="color:#888;">' . $field['name'] . '</span>';
+                                }
+                                else
+                                {
+                                    if ($key === $orderBy)
+                                    {
+                                        ?>
+                                        <a href="/tasks/<?=$key . '/' . ($sortBy == 'asc' ? 'desc' : 'asc') . '/' . $page?>">
+                                            <u style="color:#000;"><?=($sortBy == 'asc' ? '&uarr;' : '&darr;')?> <?=$field['name']?></u>
+                                        </a>
+                                        <?php
+                                    }
+                                    else
+                                    {
+                                        ?>
+                                        <a href="/tasks/<?=$key . '/asc/' . $page?>">
+                                            <?=$field['name']?>
+                                        </a>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </th>
+                            <?
+                        }
+                        ?>
                     </tr>
                     </thead>
                     <tbody>

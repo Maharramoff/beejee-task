@@ -58,6 +58,11 @@ class Task extends Model
     {
         [$start, $page, $totalRows, $maxPages] = static::paginate($page, $limit);
 
+        if($orderBy === 'status')
+        {
+            $orderBy = 'CONCAT(`completed`, `edited`)';
+        }
+
         return [
             'rows'      => static::db()->query("SELECT * FROM " . static::$table . " 
                         ORDER BY " . $orderBy . " " . $sortBy . " 
