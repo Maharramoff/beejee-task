@@ -59,28 +59,28 @@ final class Helper
         $in  =-3;
         $out = 3;
 
-        for ($ot = $in; $ot <= $out; $ot++)
+        for ($i = $in; $i <= $out; $i++)
         {
-            $t_str = $page + $ot;
+            $pageNum = $page + $i;
 
-            if ($t_str > 1 && $t_str < $maxPages)
+            if ($pageNum > 1 && $pageNum < $maxPages)
             {
-                if ($in == $ot && $t_str > 2)
+                if ($in == $i && $pageNum > 2)
                 {
-                    $html .= ' ..';
+                    $html .= '<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1"> ..</a></li>';
                 }
-                if ($ot != 0)
+                if ($i != 0)
                 {
-                    $html .= '<li class="page-item"><a class="page-link" href="' . $uri . '/' . $t_str . '">' . $t_str . '</a></li>';
+                    $html .= '<li class="page-item"><a class="page-link" href="' . $uri . '/' . $pageNum . '">' . $pageNum . '</a></li>';
                 }
                 else
                 {
-                    $html .= '<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">' . $t_str . '</a></li>';
+                    $html .= '<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">' . $pageNum . '</a></li>';
                 }
 
-                if ($ot == $out && $t_str < $maxPages - 1)
+                if ($i == $out && $pageNum < $maxPages - 1)
                 {
-                    $html .= ' ..';
+                    $html .= '<li class="page-item disabled"><a class="page-link" href="#" tabindex="-1"> ..</a></li>';
                 }
             }
         }

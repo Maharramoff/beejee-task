@@ -1,21 +1,18 @@
 <div class="container p-3">
     <div class="row">
-        <div>
-            <div class="col-12">
-                <a class="btn btn-primary btn-sm float-left mb-3" href="/tasks/create" role="button">Новая задача</a>
-            </div>
-        </div>
         <div class="col-12">
-            <div class="table-responsive">
+            <a class="btn btn-primary btn-sm float-left mb-3" href="/tasks/create" role="button">Новая задача</a>
+            <?=$pagination?>
+            <div class="table-responsive-md">
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Имя пользователя</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Текст задачи</th>
-                        <th scope="col">Статус</th>
-                        <th scope="col">Действия</th>
+                        <th scope="col" style="width: 5%">#</th>
+                        <th scope="col" style="width: 10%">Имя пользователя</th>
+                        <th scope="col" style="width: 15%">Email</th>
+                        <th scope="col" style="width: 25%">Текст задачи</th>
+                        <th scope="col" style="width: 25%">Статус</th>
+                        <th scope="col" style="width: 20%">Действия</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -35,6 +32,7 @@
                                 {
                                     ?>
                                     <span class="badge badge-success">Выполнено</span>
+                                    <br/>
                                     <?php
                                 }
                                 if ($task['edited'])
@@ -56,7 +54,6 @@
                     ?>
                     </tbody>
                 </table>
-                <?=$pagination?>
             </div>
         </div>
     </div>
