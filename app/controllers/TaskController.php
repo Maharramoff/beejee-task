@@ -5,16 +5,12 @@ namespace App\Controllers;
 
 
 use App\Models\Task;
+use BeeJee\Helper;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 
 class TaskController extends BaseController
 {
-    public function show(int $id)
-    {
-        $this->view->setPath('task/show')->assign('foo', $id)->render();
-    }
-
     public function index()
     {
         $data['tasks'] = Task::all();
@@ -25,7 +21,7 @@ class TaskController extends BaseController
     {
         if ($this->request->getMethod() === 'POST')
         {
-            if ($this->validate($this->parameterBag))
+            if ($this->validateCreate($this->parameterBag))
             {
                 $taskId = Task::create([
                     'user_name'  => $this->parameterBag->get('user_name'),
@@ -35,11 +31,11 @@ class TaskController extends BaseController
 
                 if ($taskId)
                 {
-                    $this->successResponse();
+                    $this->setSuccessMessage('Вы успешно создали новую задачу.');
                 }
                 else
                 {
-                    $this->setErrorMessage('DB error');
+                    $this->setErrorMessage('Невозможно создать запись в базе данных. Пожалуйста, попробуйте еще раз.');
                 }
             }
         }
@@ -47,13 +43,50 @@ class TaskController extends BaseController
         $this->view->setPath('task/create')->render();
     }
 
+    public function update(int $id)
+    {
+        // Only admins can edit task
+        if (!$this->auth->isAdmin())
+        {
+            Helper::redirect('/');
+        }
+
+        $data['task'] = Task::find($id);
+
+        // Task not found
+        if (empty($data['task']))
+        {
+            Helper::redirect('/');
+        }
+
+        if ($this->request->getMethod() === 'POST')
+        {
+            if ($this->validateUpdate($this->parameterBag))
+            {
+                $taskId = Task::update([
+                    'text'   => $this->parameterBag->get('text'),
+                    'id'     => $id,
+                    'status' => $this->calculateStatus($data['task']['status']),
+                ]);
+
+                if ($taskId)
+                {
+                    $this->setSuccessMessage('Вы успешно отредактировали задачу.');
+                    $data['task']['text'] = $this->parameterBag->get('text');
+                }
+            }
+        }
+
+        $this->view->setPath('task/edit')->assign($data)->render();
+    }
+
     /**
-     * Validate request
+     * Validate create request
      *
      * @param ParameterBag $parameterBag
      * @return bool
      */
-    private function validate(ParameterBag $parameterBag): bool
+    private function validateCreate(ParameterBag $parameterBag): bool
     {
         switch (true)
         {
@@ -62,12 +95,29 @@ class TaskController extends BaseController
                 return false;
 
             case !$this->isValidEmail($parameterBag->get('user_email')):
-                $this->emailNotValidResponse();
+                $this->setErrorMessage('Неправильно введен адрес электронной почты.');
                 return false;
 
             default:
                 return true;
         }
+    }
+
+    /**
+     * Validate update request
+     *
+     * @param ParameterBag $parameterBag
+     * @return bool
+     */
+    private function validateUpdate(ParameterBag $parameterBag): bool
+    {
+        if (empty($parameterBag->get('text')))
+        {
+            $this->setErrorMessage('Текст не должен быть пустым.');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -85,13 +135,16 @@ class TaskController extends BaseController
         return filter_var($email, FILTER_VALIDATE_EMAIL);
     }
 
-    private function emailNotValidResponse()
+    private function calculateStatus(int $currentStatus, $method = 'update')
     {
-        $this->setErrorMessage('Неправильно введен адрес электронной почты');
-    }
+        if ($currentStatus == 0)
+        {
+            return $method === 'update' ? 2 : 1;
+        }
 
-    private function successResponse()
-    {
-        $this->setSuccessMessage('Вы успешно создали новую задачу');
+        if ($currentStatus >= 1)
+        {
+            return 12;
+        }
     }
 }

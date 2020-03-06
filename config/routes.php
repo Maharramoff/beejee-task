@@ -10,6 +10,7 @@ return function (RouteCollector $r)
     $r->get('/tasks/{id:[0-9]+}', 'TaskController#show');
     $r->get('/tasks/create', 'TaskController#create');
     $r->post('/tasks/create', 'TaskController#create');
+    $r->addRoute(['POST', 'GET'], '/tasks/edit/{id:[0-9]+}', 'TaskController#update');
 
     // Authentication routes
     $r->get('/auth/login', 'AuthController#login');

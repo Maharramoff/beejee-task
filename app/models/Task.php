@@ -21,4 +21,21 @@ class Task extends Model
         static::db()->prepare($sql)->execute($requestData);
         return static::db()->lastInsertId();
     }
+
+    /**
+     * Update task row
+     *
+     * @param array $requestData
+     * @return int
+     */
+    public static function update(array $requestData): int
+    {
+        $sql = "UPDATE `tasks` SET 
+                   `text` = :text,
+                   `status` = :status
+                WHERE `id` = :id";
+        $stmt = static::db()->prepare($sql);
+        $stmt->execute($requestData);
+        return $stmt->rowCount();
+    }
 }
