@@ -61,12 +61,15 @@ class TaskController extends BaseController
 
         if ($this->request->getMethod() === 'POST')
         {
+            similar_text($data['task']['text'], $this->parameterBag->get('text'), $percent);
+
             if ($this->validateUpdate($this->parameterBag))
             {
                 $taskId = Task::update([
-                    'text'   => $this->parameterBag->get('text'),
-                    'id'     => $id,
-                    'status' => $this->calculateStatus($data['task']['status']),
+                    'text'      => $this->parameterBag->get('text'),
+                    'id'        => $id,
+                    'completed' => $this->parameterBag->has('is_completed'),
+                    'edited'    => $percent < 100 ? 1 : $data['task']['edited']
                 ]);
 
                 if ($taskId)
@@ -133,18 +136,5 @@ class TaskController extends BaseController
 
         // Validate Email
         return filter_var($email, FILTER_VALIDATE_EMAIL);
-    }
-
-    private function calculateStatus(int $currentStatus, $method = 'update')
-    {
-        if ($currentStatus == 0)
-        {
-            return $method === 'update' ? 2 : 1;
-        }
-
-        if ($currentStatus >= 1)
-        {
-            return 12;
-        }
     }
 }

@@ -32,7 +32,8 @@ class Task extends Model
     {
         $sql = "UPDATE `tasks` SET 
                    `text` = :text,
-                   `status` = :status
+                   `completed` = :completed,
+                   `edited` = :edited
                 WHERE `id` = :id";
         $stmt = static::db()->prepare($sql);
         $stmt->execute($requestData);
