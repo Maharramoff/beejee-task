@@ -31,24 +31,31 @@
                             <td><?=$helper::escapeHtml($task['text'])?></td>
                             <td>
                                 <?php
-                                if ($task['status'] >= 1)
+                                if ($task['status'] == 1)
                                 {
                                     ?>
                                     <span class="badge badge-success">Выполнено</span>
                                     <?php
-                                    if ($task['status'] == 2)
+                                }
+                                if ($task['status'] >= 2)
+                                {
+                                    if ($task['status'] == 12)
                                     {
                                         ?>
-                                        <span class="badge badge-info">Отредактировано администратором</span>
+                                        <span class="badge badge-success">Выполнено</span>
                                         <?php
                                     }
+
+                                    ?>
+                                    <span class="badge badge-info">Отредактировано администратором</span>
+                                    <?php
                                 }
                                 ?>
                             </td>
                             <td>
-                                <a class="btn btn-warning btn-sm mb-2 btn-block <?=(null !== $user ? '' : 'disabled')?>"
+                                <a class="btn btn-warning btn-sm mb-2 btn-block <?=($isAdmin ?: 'disabled')?>"
                                    href="/tasks/edit/<?=$task['id']?>">Отредактировать</a>
-                                <a class="btn btn-success btn-sm btn-block <?=(null !== $user ? '' : 'disabled')?>"
+                                <a class="btn btn-success btn-sm btn-block <?=($isAdmin ?: 'disabled')?>"
                                    href="/tasks/complete/<?=$task['id']?>">Выполнить</a>
                             </td>
                         </tr>

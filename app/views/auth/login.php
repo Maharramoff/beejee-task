@@ -5,19 +5,19 @@
                 include APP_PATH . 'views/layouts/alerts.php';
             ?>
             <div class="card">
-                <div class="card-header">Login</div>
+                <div class="card-header">Авторизация на сайте</div>
                 <div class="card-body">
                     <form action="/auth/login" method="post">
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
+                            <label for="name" class="col-md-4 col-form-label text-md-right">Имя пользователя</label>
                             <div class="col-md-6">
                                 <input type="text" id="name" class="form-control" name="name" autofocus required>
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-right">Пароль</label>
                             <div class="col-md-6">
                                 <input type="password" id="password" class="form-control" name="password" required>
                             </div>
@@ -25,7 +25,7 @@
 
                         <div class="col-md-6 offset-md-4">
                             <button type="submit" class="btn btn-primary">
-                                Submit
+                                Вход
                             </button>
                         </div>
 
