@@ -18,7 +18,7 @@ final class Helper
     {
         if (false === headers_sent())
         {
-            if($seconds > 0)
+            if ($seconds > 0)
             {
                 header("refresh:" . $seconds . "; url=" . $uri, true, $code);
                 exit;
@@ -39,5 +39,36 @@ final class Helper
     public static function escapeHtml(string $str): string
     {
         return htmlspecialchars($str, ENT_QUOTES, 'UTF-8', false);
+    }
+
+    public static function paginate($uri, $maxPages, $totalRows, $limit, $page)
+    {
+        if ($totalRows <= $limit) return null;
+
+        $html = '<div class="padtop_m"><div>';
+
+        $html .= '</div><div class="padtop_m">';
+
+        if ($page != 1)
+        {
+            $html .= '<a class="page" href="' . $uri . '/1">1</a>';
+        }
+        else
+        {
+            $html .= '<b class="current">&#160;1&#160;</b>';
+        }
+
+        if ($page != $maxPages)
+        {
+            $html .= '<a class="page" href="' . $uri . '/' . $maxPages . '">' . $maxPages . '</a>';
+        }
+        elseif ($maxPages > 1)
+        {
+            $html .= '<b class="current">&#160;' . $maxPages . '&#160;</b>';
+        }
+
+        $html .= '</div></div>';
+
+        return $html;
     }
 }
