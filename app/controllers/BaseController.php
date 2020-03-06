@@ -11,6 +11,7 @@ class BaseController extends Controller
 {
     protected $auth;
     protected $user = null;
+    protected $isAdmin = false;
 
     public function __construct()
     {
@@ -18,10 +19,12 @@ class BaseController extends Controller
 
         $this->auth = new Auth();
         $this->user = $this->auth->user();
+        $this->isAdmin = $this->auth->isAdmin();
 
         // Global variables for all views
         $this->view->assign([
             'user'           => $this->user,
+            'isAdmin'        => $this->isAdmin,
             'successMessage' => null,
             'errorMessage'   => null,
             'helper'         => Helper::class,
@@ -48,5 +51,10 @@ class BaseController extends Controller
             'errorMessage'   => null,
             'successMessage' => $successMessage
         ]);
+    }
+
+    protected function emptyFieldsResponse()
+    {
+        $this->setErrorMessage('Все поля должны быть заполнены');
     }
 }

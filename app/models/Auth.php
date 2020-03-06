@@ -79,6 +79,16 @@ class Auth
     }
 
     /**
+     * Determine if the current user is admin.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->check() && $this->user['is_admin'] == 1;
+    }
+
+    /**
      * Log a user into the application.
      *
      * @param $user
