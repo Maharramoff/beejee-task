@@ -89,7 +89,7 @@ class TaskController extends BaseController
                 $taskId = Task::update([
                     'text'      => $this->parameterBag->get('text'),
                     'id'        => $id,
-                    'completed' => $this->parameterBag->has('is_completed'),
+                    'completed' => (int)$this->parameterBag->has('is_completed'),
                     'edited'    => $percent < 100 ? 1 : $data['task']['edited']
                 ]);
 
@@ -97,6 +97,7 @@ class TaskController extends BaseController
                 {
                     $this->setSuccessMessage('Вы успешно отредактировали задачу.');
                     $data['task']['text'] = $this->parameterBag->get('text');
+                    $data['task']['completed'] = $this->parameterBag->get('is_completed');
                 }
             }
         }
