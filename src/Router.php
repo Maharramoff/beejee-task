@@ -47,6 +47,7 @@ class Router
 
             call_user_func_array(array($controllerObject, $this->method), $this->routeData[2]);
         }
+        else throw new RuntimeException("No route matches.");
     }
 
     private function validate()

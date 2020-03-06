@@ -11,9 +11,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 class TaskController extends BaseController
 {
-    public function index()
+    public function index($orderBy = 'id', $sortBy = 'asc', $page = 1)
     {
-        $data['tasks'] = Task::all();
+        $result = Task::allFiltered($orderBy, $sortBy, $page, 3);
+        $data['tasks'] = $result['rows'];
+        $data['pagination'] = Helper::paginate('/tasks/' . $orderBy . '/' . $sortBy, $result['maxPages'], $result['totalRows'], 3, $result['page']);
         $this->view->setPath('task/index')->assign($data)->render();
     }
 
@@ -48,7 +50,7 @@ class TaskController extends BaseController
         // Only admins can edit task
         if (!$this->auth->isAdmin())
         {
-            Helper::redirect('/');
+            Helper::redirect('/auth/login');
         }
 
         $data['task'] = Task::find($id);

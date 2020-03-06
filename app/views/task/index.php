@@ -56,6 +56,7 @@
                     ?>
                     </tbody>
                 </table>
+                <?=$pagination?>
             </div>
         </div>
     </div>
